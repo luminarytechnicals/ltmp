@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LTMP — Luminary Telegram Management Panel</title>
+
+<!-- Favicons & Website Logo in the Head -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'%3E%3Cpath d='M50 5L90 25V60C90 78.5 73 91.5 50 95C27 91.5 10 78.5 10 60V25L50 5Z' fill='%23161b24' stroke='%2300e5b0' stroke-width='4'/%3E%3Cpath d='M55 25L32 55H50L45 75L68 45H50L55 25Z' fill='%2300e5b0'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'%3E%3Cpath d='M50 5L90 25V60C90 78.5 73 91.5 50 95C27 91.5 10 78.5 10 60V25L50 5Z' fill='%23161b24' stroke='%2300e5b0' stroke-width='4'/%3E%3Cpath d='M55 25L32 55H50L45 75L68 45H50L55 25Z' fill='%2300e5b0'/%3E%3C/svg%3E">
+
+<!-- SEO Meta Tags -->
+<meta name="description" content="Luminary Telegram Management Panel (LTMP) - The ultimate premium, high-speed, local dashboard for bulk Telegram session management, statistics tracking, group leaving, and secure account control. Designed with advanced developer tools.">
+<meta name="keywords" content="Telegram, Session Management, LTMP, Luminary Telegram, Bulk Leave, Session Control, Security, Telethon Dashboard">
+<meta name="author" content="AR. Abhinav Ranjan">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://abhinavranjan.qzz.io">
+<meta property="og:title" content="LTMP — Luminary Telegram Management Panel">
+<meta property="og:description" content="The ultimate premium, high-speed, local dashboard for bulk Telegram session management, statistics tracking, and secure account control.">
+<meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'%3E%3Cpath d='M50 5L90 25V60C90 78.5 73 91.5 50 95C27 91.5 10 78.5 10 60V25L50 5Z' fill='%23161b24' stroke='%2300e5b0' stroke-width='4'/%3E%3Cpath d='M55 25L32 55H50L45 75L68 45H50L55 25Z' fill='%2300e5b0'/%3E%3C/svg%3E">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:title" content="LTMP — Luminary Telegram Management Panel">
+<meta property="twitter:description" content="The ultimate premium, high-speed, local dashboard for bulk Telegram session management, statistics tracking, and secure account control.">
+<meta property="twitter:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'%3E%3Cpath d='M50 5L90 25V60C90 78.5 73 91.5 50 95C27 91.5 10 78.5 10 60V25L50 5Z' fill='%23161b24' stroke='%2300e5b0' stroke-width='4'/%3E%3Cpath d='M55 25L32 55H50L45 75L68 45H50L55 25Z' fill='%2300e5b0'/%3E%3C/svg%3E">
+
+<!-- Premium Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- JSON-LD Structured Schema for Search Engines (AEO/SEO/GEO) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Luminary Telegram Management Panel (LTMP)",
+  "operatingSystem": "Windows, macOS, Linux",
+  "applicationCategory": "UtilitiesApplication",
+  "description": "Premium local dashboard for bulk Telegram session management, statistics tracking, and secure account control.",
+  "image": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'%3E%3Cpath d='M50 5L90 25V60C90 78.5 73 91.5 50 95C27 91.5 10 78.5 10 60V25L50 5Z' fill='%23161b24' stroke='%2300e5b0' stroke-width='4'/%3E%3Cpath d='M55 25L32 55H50L45 75L68 45H50L55 25Z' fill='%2300e5b0'/%3E%3C/svg%3E",
+  "offers": {
+    "@type": "Offer",
+    "price": "0.00",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "AR. Abhinav Ranjan",
+    "url": "https://abhinavranjan.qzz.io"
+  }
+}
+</script>
+
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0e1117;--bg2:#161b24;--bg3:#1e2535;
+    --border:#2a3347;--neon:#00e5b0;--neon-d:#00e5b018;
+    --text:#e2e8f0;--muted:#64748b;--dim:#94a3b8;
+    --danger:#f87171;--warn:#fbbf24;--info:#60a5fa;--ok:#34d399;
+    --radius:8px;
+  }
+  body{background:var(--bg);color:var(--text);font-family:'Outfit',system-ui,sans-serif;font-size:13px;min-height:100vh}
+  /* LAYOUT */
+  .app{display:flex;height:100vh;overflow:hidden}
+  /* SIDEBAR */
+  .sidebar{width:210px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+  .logo{border-bottom:1px solid var(--border)}
+  .logo-text{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:900;color:var(--text)}
+  .logo-sub{font-family:'Outfit',sans-serif;font-size:10px;color:var(--muted)}
+  nav{padding:10px 8px;flex:1;overflow-y:auto}
+  .nav-sec{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;padding:10px 6px 4px}
+  .nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:6px;cursor:pointer;color:var(--dim);font-size:13px;margin-bottom:2px;transition:all .15s;user-select:none}
+  .nav-item:hover{background:var(--bg3);color:var(--text)}
+  .nav-item.active{background:var(--neon-d);color:var(--neon);border:1px solid #00e5b030}
+  .nav-icon{font-size:16px;width:18px;text-align:center}
+  .sidebar-foot{padding:12px 10px;border-top:1px solid var(--border)}
+  .acct-pill{display:flex;align-items:center;gap:9px;padding:8px 10px;background:var(--bg3);border-radius:8px;cursor:pointer}
+  .avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+  .acct-name{font-size:12px;font-weight:600;color:var(--text)}
+  .acct-phone{font-size:10px;color:var(--muted)}
+  .status-dot{width:7px;height:7px;border-radius:50%;margin-left:auto;flex-shrink:0}
+  .dot-green{background:var(--ok)}
+  .dot-red{background:var(--danger)}
+  .dot-grey{background:var(--muted)}
+  /* MAIN */
+  .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  /* TOPBAR */
+  .topbar{height:50px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:10px;flex-shrink:0}
+  .topbar-title{font-size:15px;font-weight:700;flex:1}
+  .chip{display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);padding:4px 10px;border-radius:20px;font-size:11px;color:var(--dim)}
+  /* CONTENT */
+  .content{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:16px}
+  /* CARDS */
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+  .card-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+  .card-title{font-size:13px;font-weight:600;flex:1}
+  .card-body{padding:16px}
+  /* BUTTONS */
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:6px;font-size:12px;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--dim);transition:all .15s;font-family:inherit;white-space:nowrap}
+  .btn:hover{color:var(--text);border-color:var(--neon)}
+  .btn-primary{background:var(--neon);color:#000;border-color:var(--neon);font-weight:700}
+  .btn-primary:hover{background:#00ffbf;color:#000}
+  .btn-danger{border-color:var(--danger);color:var(--danger)}
+  .btn-danger:hover{background:#f8717115}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  /* INPUTS */
+  input[type=text],input[type=tel],input[type=password]{
+    width:100%;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);
+    border-radius:6px;color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:border .15s
+  }
+  input:focus{border-color:var(--neon)}
+  label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}
+  /* TABLE */
+  table{width:100%;border-collapse:collapse}
+  th{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);font-weight:500}
+  td{padding:9px 12px;border-bottom:1px solid #1a2030;font-size:12px;color:var(--dim);vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--bg3);color:var(--text)}
+  .tbl-wrap{overflow-x:auto}
+  /* BADGES */
+  .badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
+  .badge-green{background:#34d39920;color:var(--ok)}
+  .badge-red{background:#f8717120;color:var(--danger)}
+  .badge-blue{background:#60a5fa20;color:var(--info)}
+  .badge-yellow{background:#fbbf2420;color:var(--warn)}
+  .badge-grey{background:#64748b20;color:var(--muted)}
+  /* STATS ROW */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+  .stat-lbl{font-size:11px;color:var(--muted);margin-bottom:6px}
+  .stat-val{font-size:24px;font-weight:700}
+  .stat-sub{font-size:10px;color:var(--muted);margin-top:3px}
+  /* CHECKBOX */
+  input[type=checkbox]{width:14px;height:14px;accent-color:var(--neon);cursor:pointer}
+  /* LOGIN */
+  .login-wrap{max-width:400px;margin:60px auto}
+  .login-method-tabs{display:flex;gap:4px;margin-bottom:18px}
+  .method-tab{flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;text-align:center;cursor:pointer;color:var(--dim);font-size:13px;transition:all .15s}
+  .method-tab.active{border-color:var(--neon);color:var(--neon);background:var(--neon-d)}
+  .field{margin-bottom:14px}
+  .qr-box{text-align:center;padding:20px}
+  .qr-box img{width:200px;height:200px;border-radius:8px;border:3px solid var(--neon)}
+  .qr-hint{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.6}
+  /* STEPS */
+  .step{display:none}.step.active{display:block}
+  /* LOG */
+  .log{background:var(--bg);border-radius:6px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.9;max-height:140px;overflow-y:auto}
+  .log-line{display:flex;gap:10px}
+  .lt{color:var(--muted);flex-shrink:0}
+  .li{color:var(--info)} .lw{color:var(--warn)} .le{color:var(--danger)} .lo{color:var(--ok)}
+  /* ALERT */
+  .alert{padding:10px 14px;border-radius:6px;font-size:12px;margin-bottom:12px;display:none}
+  .alert.show{display:flex;align-items:center;gap:8px}
+  .alert-err{background:#f8717115;border:1px solid #f8717140;color:var(--danger)}
+  .alert-ok{background:#34d39915;border:1px solid #34d39940;color:var(--ok)}
+  /* PROGRESS */
+  .progress{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-top:6px}
+  .progress-fill{height:100%;background:var(--neon);border-radius:2px;transition:width .3s}
+  /* HIDE */
+  .hidden{display:none!important}
+  /* LOADING OVERLAY */
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 15, 26, 0.65);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .loading-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .loader-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid var(--bg3);
+    border-top: 3px solid var(--neon);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+    margin: 0 auto;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 15, 26, 0.75);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .modal-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .modal-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(0, 255, 136, 0.1);
+    transform: scale(0.9);
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .modal-overlay.show .modal-card {
+    transform: scale(1);
+  }
+  .modal-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--fg);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .modal-msg {
+    font-size: 13px;
+    color: var(--dim);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  .modal-actions .btn {
+    flex: 1;
+    padding: 10px;
+    font-weight: 600;
+  /* RESPONSIVE DESIGN */
+  .hamburger-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px 8px;
+    margin-right: 8px;
+    outline: none;
+  }
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(8, 12, 18, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .sidebar-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (max-width: 768px) {
+    .hamburger-btn {
+      display: block;
+    }
+    .sidebar {
+      position: fixed;
+      left: -220px;
+      top: 0;
+      height: 100vh;
+      z-index: 999;
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .sidebar.active {
+      left: 0;
+    }
+    .stats {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .topbar {
+      padding: 0 12px;
+    }
+    .content {
+      padding: 12px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .stats {
+      grid-template-columns: 1fr;
+    }
+    .topbar-title {
+      font-size: 13px;
+    }
+    .chip {
+      padding: 3px 8px;
+      font-size: 10px;
+    }
+    .card-body {
+      padding: 12px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay show" id="loading-overlay">
+  <div style="text-align: center;">
+    <div class="loader-spinner"></div>
+    <div style="margin-top: 15px; font-weight: 600; color: var(--neon); font-size: 11px; letter-spacing: 1.5px; font-family: monospace;">LOADING SECURE DATA...</div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-card">
+    <div class="modal-title" id="confirm-title">⚠️ Confirm Action</div>
+    <div class="modal-msg" id="confirm-message">Are you sure you want to proceed?</div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="confirm-btn-cancel" style="background: var(--bg3); border: 1px solid var(--border); color: var(--text);">Cancel</button>
+      <button class="btn btn-primary" id="confirm-btn-ok">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<div class="app" id="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="logo" style="display: flex; align-items: center; gap: 12px; padding: 20px 24px 15px 24px;">
+      <svg width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 8px var(--neon));">
+        <path d="M50 5L90 25V60C90 78.5 73 91.5 50 95C27 91.5 10 78.5 10 60V25L50 5Z" fill="url(#logo-grad)" stroke="var(--neon)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M55 25L32 55H50L45 75L68 45H50L55 25Z" fill="var(--neon)"/>
+        <defs>
+          <linearGradient id="logo-grad" x1="50" y1="5" x2="50" y2="95" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#0aff88" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="#00e5ff" stop-opacity="0.05"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div>
+        <div class="logo-text" style="font-size: 16px; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(90deg, var(--neon), #00e5ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">LTMP</div>
+        <div class="logo-sub" style="font-size: 9px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px;">Luminary Panel</div>
+      </div>
+    </div>
+    <nav>
+      <div class="nav-sec">Navigation</div>
+      <div class="nav-item active" onclick="showPage('dashboard')">
+        <span class="nav-icon">📊</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="showPage('channels')">
+        <span class="nav-icon">📢</span> Channels &amp; Groups
+      </div>
+      <div class="nav-item" onclick="showPage('chats')">
+        <span class="nav-icon">💬</span> Chats
+      </div>
+      <div class="nav-item" onclick="showPage('logs')">
+        <span class="nav-icon">📋</span> Logs
+      </div>
+      <div class="nav-sec">Account</div>
+      <div class="nav-item" onclick="showPage('login')">
+        <span class="nav-icon">🔑</span> Login / Session
+      </div>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="acct-pill" id="acct-pill" onclick="showPage('account')" style="cursor: pointer;">
+        <div class="avatar" id="acct-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+          <img id="acct-pfp-img" class="hidden" style="width: 100%; height: 100%; object-fit: cover;">
+          <span id="acct-avatar-text">?</span>
+        </div>
+        <div>
+          <div class="acct-name" id="acct-name">Not logged in</div>
+          <div class="acct-phone" id="acct-phone">—</div>
+        </div>
+        <div class="status-dot dot-grey" id="status-dot"></div>
+      </div>
+    </div>
+    <div class="sidebar-footer" style="padding: 12px 14px; font-size: 9px; color: var(--dim); border-top: 1px solid var(--border); line-height: 1.4; font-family: sans-serif; margin-top: auto;">
+      <div>© 2026 LTMP. All rights reserved.</div>
+      <div style="margin-top: 3px;">Developed by <a href="https://abhinavranjan.qzz.io" target="_blank" style="color: var(--neon); text-decoration: none; font-weight: 600; text-shadow: 0 0 6px rgba(0,255,136,0.3); transition: opacity 0.2s;">AR. Abhinav Ranjan</a></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+      <div class="topbar-title" id="page-title">Dashboard</div>
+      <div class="chip" id="conn-chip">⚫ Disconnected</div>
+      <div class="chip" id="api-chip">🔗 Backend</div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ══ PAGE: DASHBOARD ══ -->
+      <div id="page-dashboard">
+        <div class="stats" id="stats-row" style="margin-bottom:16px">
+          <div class="stat"><div class="stat-lbl">📢 Channels</div><div class="stat-val" id="s-channels" style="color:var(--neon)">—</div><div class="stat-sub">joined</div></div>
+          <div class="stat"><div class="stat-lbl">👥 Groups</div><div class="stat-val" id="s-groups" style="color:var(--warn)">—</div><div class="stat-sub">joined</div></div>
+          <div class="stat"><div class="stat-lbl">💬 Chats</div><div class="stat-val" id="s-chats">—</div><div class="stat-sub">private</div></div>
+          <div class="stat"><div class="stat-lbl">📬 Unread</div><div class="stat-val" id="s-unread" style="color:var(--danger)">—</div><div class="stat-sub">total</div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">👋 Welcome to LTMP</span></div>
+          <div class="card-body" style="line-height:1.8;color:var(--dim)">
+            <p>Luminary Telegram Management Panel manages <strong style="color:var(--text)">your own</strong> Telegram account locally. Nothing leaves your PC.</p>
+            <br>
+            <p><strong style="color:var(--neon)">Step 1 —</strong> Edit <code style="background:var(--bg3);padding:2px 6px;border-radius:4px">config.js</code> with your API ID and API Hash from <a href="https://my.telegram.org" style="color:var(--info)">my.telegram.org</a></p>
+            <p><strong style="color:var(--neon)">Step 2 —</strong> Run <code style="background:var(--bg3);padding:2px 6px;border-radius:4px">start.bat</code> to launch the backend</p>
+            <p><strong style="color:var(--neon)">Step 3 —</strong> Go to <strong>Login / Session</strong> in the sidebar to connect your account</p>
+            <br>
+            <button class="btn btn-primary" onclick="loadDashboard()">🔄 Refresh Stats</button>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="card-header"><span class="card-title">⚡ Power-User Operations</span></div>
+          <div class="card-body">
+            <p style="color:var(--dim);margin-bottom:16px">Mark thousands of unread channel feeds, group chats, or private direct messages as read in one click.</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:12px">
+              <button class="btn btn-primary" onclick="markAllRead('all')">📚 Mark All Read</button>
+              <button class="btn btn-secondary" onclick="markAllRead('channel')" style="border-color:var(--neon);color:var(--neon)">📢 Mark Channels Read</button>
+              <button class="btn btn-secondary" onclick="markAllRead('group')" style="border-color:var(--warn);color:var(--warn)">👥 Mark Groups Read</button>
+              <button class="btn btn-secondary" onclick="markAllRead('chat')" style="border-color:var(--info);color:var(--info)">💬 Mark Direct DMs Read</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PAGE: LOGIN ══ -->
+      <div class="hidden" id="page-login">
+        <div class="login-wrap">
+          <div class="card">
+            <div class="card-header"><span class="card-title">🔑 Account Login</span></div>
+            <div class="card-body">
+
+              <div class="alert alert-err" id="login-err">⚠ <span id="login-err-msg"></span></div>
+              <div class="alert alert-ok" id="login-ok">✅ <span id="login-ok-msg"></span></div>
+
+              <!-- STEP: choose method -->
+              <div class="step active" id="ls-choose">
+                <div style="margin-bottom:14px;color:var(--dim);font-size:13px;line-height:1.7">
+                  Choose how you want to log in to your Telegram account.
+                </div>
+                <div class="login-method-tabs">
+                  <div class="method-tab active" id="tab-phone" onclick="setMethod('phone')">📱 Phone + OTP</div>
+                  <div class="method-tab" id="tab-qr" onclick="setMethod('qr')">📷 QR Code</div>
+                </div>
+                <div id="method-desc" style="color:var(--dim);font-size:12px;line-height:1.6;margin-bottom:18px">
+                  Enter your phone number and receive an OTP via Telegram or SMS.
+                </div>
+                <button class="btn btn-primary" style="width:100%" onclick="startLogin()">Continue →</button>
+              </div>
+
+              <!-- STEP: phone input -->
+              <div class="step" id="ls-phone">
+                <div class="field">
+                  <label>Your phone number (international format)</label>
+                  <input type="tel" id="inp-phone" placeholder="+91 98765 43210" value="">
+                </div>
+                <button class="btn btn-primary" style="width:100%" onclick="sendPhone()">Send OTP →</button>
+                <button class="btn" style="width:100%;margin-top:8px" onclick="backToChoose()">← Back</button>
+              </div>
+
+              <!-- STEP: OTP input -->
+              <div class="step" id="ls-otp">
+                <div style="color:var(--dim);font-size:12px;margin-bottom:14px;line-height:1.6">
+                  A code was sent to your Telegram app (or SMS). Enter it below.
+                </div>
+                <div class="field">
+                  <label>OTP Code</label>
+                  <input type="text" id="inp-otp" placeholder="12345" maxlength="8" style="letter-spacing:4px;font-size:18px;text-align:center">
+                </div>
+                <button class="btn btn-primary" style="width:100%" onclick="submitOTP()">Verify →</button>
+                <button class="btn" style="width:100%;margin-top:8px" onclick="backToChoose()">← Start over</button>
+              </div>
+
+              <!-- STEP: 2FA -->
+              <div class="step" id="ls-2fa">
+                <div style="color:var(--dim);font-size:12px;margin-bottom:14px;line-height:1.6">
+                  Your account has Two-Step Verification enabled. Enter your cloud password.
+                </div>
+                <div class="field">
+                  <label>Cloud Password</label>
+                  <input type="password" id="inp-2fa" placeholder="Your Telegram password">
+                </div>
+                <button class="btn btn-primary" style="width:100%" onclick="submit2FA()">Login →</button>
+              </div>
+
+              <!-- STEP: QR code -->
+              <div class="step" id="ls-qr">
+                <div class="qr-box">
+                  <img id="qr-img" src="" alt="QR Code">
+                  <div class="qr-hint">
+                    Open <strong>Telegram</strong> on your phone<br>
+                    → Settings → Devices → Link Desktop Device<br>
+                    Scan this QR code
+                  </div>
+                </div>
+                <button class="btn" style="width:100%;margin-top:10px" onclick="backToChoose()">← Back</button>
+              </div>
+
+              <!-- STEP: done -->
+              <div class="step" id="ls-done">
+                <div style="text-align:center;padding:20px">
+                  <div style="font-size:48px;margin-bottom:12px">✅</div>
+                  <div style="font-size:16px;font-weight:700;color:var(--ok);margin-bottom:6px">Logged in!</div>
+                  <div style="color:var(--dim);font-size:13px" id="done-name"></div>
+                  <br>
+                  <button class="btn btn-primary" onclick="showPage('channels')">View Channels →</button>
+                  <br><br>
+                  <button class="btn btn-danger" onclick="doLogout()" style="font-size:11px">Log out &amp; delete session</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PAGE: CHANNELS ══ -->
+      <div class="hidden" id="page-channels">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="flex:1;font-size:14px;font-weight:600">📢 Channels &amp; Groups</div>
+          <button class="btn" onclick="loadDialogs('channel,group')">🔄 Refresh</button>
+          <button class="btn btn-danger" id="bulk-leave-btn" onclick="bulkLeave()" disabled>🚪 Leave Selected</button>
+        </div>
+        <div id="ch-sel-info" class="hidden" style="background:var(--neon-d);border:1px solid #00e5b030;border-radius:6px;padding:8px 14px;margin-bottom:10px;font-size:12px;display:flex;align-items:center;gap:10px">
+          <span style="color:var(--neon);font-weight:700" id="ch-sel-count">0</span>
+          <span style="color:var(--dim)">selected —</span>
+          <button class="btn btn-danger" style="padding:3px 10px;font-size:11px" onclick="bulkLeave()">Leave All Selected</button>
+          <button class="btn" style="padding:3px 10px;font-size:11px" onclick="bulkArchive()">Archive All Selected</button>
+          <span style="margin-left:auto;font-size:11px;color:var(--muted)">Rate-limited to 8/min to avoid bans</span>
+        </div>
+        <div class="card">
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:34px"><input type="checkbox" id="ch-all-cb" onchange="toggleAllChannels(this)"></th>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Unread</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="ch-body">
+                <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:30px">Load dialogs to see your channels</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div id="ch-loading" class="hidden" style="text-align:center;padding:20px;color:var(--muted)">Loading your channels…</div>
+      </div>
+
+      <!-- ══ PAGE: CHATS ══ -->
+      <div class="hidden" id="page-chats">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="flex:1;font-size:14px;font-weight:600">💬 Private Chats</div>
+          <button class="btn" onclick="loadDialogs('chat')">🔄 Refresh</button>
+          <button class="btn btn-danger" id="bulk-delete-btn" onclick="bulkDeleteChats()" disabled>🗑 Delete Selected</button>
+        </div>
+        <div class="card">
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:34px"><input type="checkbox" id="chat-all-cb" onchange="toggleAllChats(this)"></th>
+                  <th>Name</th>
+                  <th>Unread</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="chat-body">
+                <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:30px">Load dialogs to see your chats</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PAGE: LOGS ══ -->
+      <div class="hidden" id="page-logs">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="flex:1;font-size:14px;font-weight:600">📋 Activity Log</div>
+          <button class="btn" onclick="clearLog()">🗑 Clear</button>
+        </div>
+        <div class="card">
+          <div class="card-body" style="padding:0">
+            <div class="log" id="main-log" style="max-height:460px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PAGE: ACCOUNT ══ -->
+      <div class="hidden" id="page-account">
+        <div class="login-wrap" style="max-width: 500px; margin: 0 auto;">
+          <div class="card">
+            <div class="card-header"><span class="card-title">👤 Telegram Account Details</span></div>
+            <div class="card-body" style="text-align: center; padding: 30px 20px;">
+              
+              <div class="acct-large-avatar-container" style="margin-bottom: 20px; position: relative; display: inline-block;">
+                <img id="acct-large-pfp" class="large-avatar hidden" style="width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--neon); box-shadow: 0 0 15px rgba(0, 255, 136, 0.4); object-fit: cover;">
+                <div id="acct-large-placeholder" class="large-avatar" style="width: 120px; height: 120px; border-radius: 50%; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 700; color: var(--neon); border: 3px solid var(--neon); box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);">?</div>
+              </div>
+
+              <div class="acct-detail-row" style="margin-bottom: 12px; font-size: 18px; font-weight: 700; color: var(--fg);">
+                <span id="acct-detail-name">Abhinav Ranjan</span>
+              </div>
+              <div class="acct-detail-row" style="margin-bottom: 20px; font-size: 14px; color: var(--dim);">
+                <span id="acct-detail-username">@Abhinav_Ranjan</span>
+              </div>
+
+              <hr style="border: 0; border-top: 1px solid var(--bg3); margin: 20px 0;">
+
+              <div class="info-list" style="text-align: left; background: var(--bg2); padding: 15px; border-radius: 8px; margin-bottom: 25px; border: 1px solid var(--bg3);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px;">
+                  <span style="color: var(--dim);">Phone Number</span>
+                  <span style="font-weight: 600;" id="acct-detail-phone">+91 82947 21929</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px;">
+                  <span style="color: var(--dim);">Telegram User ID</span>
+                  <span style="font-weight: 600; font-family: monospace;" id="acct-detail-id">6013848520</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                  <span style="color: var(--dim);">Session Name</span>
+                  <span style="font-weight: 600; color: var(--info);" id="acct-detail-session">my_account</span>
+                </div>
+              </div>
+
+              <button class="btn btn-danger" onclick="doLogout()" style="width: 100%; padding: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span>🚪</span> Log Out &amp; Delete Session
+              </button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+const BASE = window.location.origin;
+let loginMethod = 'phone';
+let authorized = false;
+let allDialogs = [];
+let selectedChannels = new Set();
+let selectedChats = new Set();
+let qrActive = false;
+
+function showLoading(show) {
+  document.getElementById('loading-overlay').classList.toggle('show', show);
+}
+
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if(sb) sb.classList.toggle('active');
+  if(overlay) overlay.classList.toggle('show');
+}
+
+function showConfirm(title, message, isDangerous=false) {
+  return new Promise((resolve) => {
+    document.getElementById('confirm-title').textContent = title;
+    document.getElementById('confirm-message').textContent = message;
+    const okBtn = document.getElementById('confirm-btn-ok');
+    const cancelBtn = document.getElementById('confirm-btn-cancel');
+    
+    if(isDangerous) {
+      okBtn.className = 'btn btn-danger';
+    } else {
+      okBtn.className = 'btn btn-primary';
+    }
+    
+    const overlay = document.getElementById('confirm-modal');
+    overlay.classList.add('show');
+    
+    function cleanup(val) {
+      overlay.classList.remove('show');
+      okBtn.onclick = null;
+      cancelBtn.onclick = null;
+      resolve(val);
+    }
+    
+    okBtn.onclick = () => cleanup(true);
+    cancelBtn.onclick = () => cleanup(false);
+  });
+}
+
+// ── log ──────────────────────────────────────────────────────
+function addLog(level, msg) {
+  const el = document.getElementById('main-log');
+  const t = new Date().toLocaleTimeString();
+  const cls = {INFO:'li',OK:'lo',WARN:'lw',ERROR:'le'}[level]||'li';
+  const div = document.createElement('div');
+  div.className = 'log-line';
+  div.innerHTML = `<span class="lt">${t}</span><span class="${cls}">[${level}]</span><span>${msg}</span>`;
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+}
+
+// ── page nav ─────────────────────────────────────────────────
+function showPage(id) {
+  // Close responsive sidebar on navigation
+  const sb = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if(sb) sb.classList.remove('active');
+  if(overlay) overlay.classList.remove('show');
+
+  // Auto redirect to login if not authorized
+  if(!authorized && ['dashboard','channels','chats','account'].includes(id)) {
+    addLog('WARN', 'Please log in to access: ' + id);
+    showPage('login');
+    return;
+  }
+
+  document.querySelectorAll('.content > div').forEach(s => s.classList.add('hidden'));
+  document.getElementById('page-'+id).classList.remove('hidden');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if(n.textContent.trim().toLowerCase().includes(id.slice(0,4))) n.classList.add('active');
+  });
+  const titles = {dashboard:'Dashboard',login:'Login / Session',channels:'Channels & Groups',chats:'Private Chats',logs:'Activity Log',account:'My Account'};
+  document.getElementById('page-title').textContent = titles[id] || id;
+  if(id==='login') {
+    if(authorized) goLoginStep('done');
+    else goLoginStep('choose');
+  }
+  if(id==='account') {
+    try {
+      fetch('/config.js').then(r=>r.text()).then(cfg=>{
+        const m = cfg.match(/(?:"session_name"|'session_name'|session_name)\s*:\s*["']([^"']+)["']/);
+        if(m) document.getElementById('acct-detail-session').textContent = m[1];
+      }).catch(()=>{});
+    } catch(e){}
+  }
+  if(id==='channels') loadDialogs('channel,group');
+  if(id==='chats') loadDialogs('chat');
+  if(id==='dashboard') loadDashboard();
+}
+
+// ── api ───────────────────────────────────────────────────────
+async function api(path, method='GET', body=null, silent=false) {
+  if(!silent) showLoading(true);
+  try {
+    const opts = {method, headers:{'Content-Type':'application/json'}};
+    if(body) opts.body = JSON.stringify(body);
+    const r = await fetch(BASE+path, opts);
+    const data = await r.json();
+    if(!silent) showLoading(false);
+    return data;
+  } catch(e) {
+    if(!silent) showLoading(false);
+    addLog('ERROR', 'Backend not reachable — is start.bat running? '+e.message);
+    return null;
+  }
+}
+
+// ── status poll ───────────────────────────────────────────────
+async function checkStatus() {
+  const st = await api('/api/status', 'GET', null, true);
+  if(!st) {
+    document.getElementById('conn-chip').textContent = '🔴 Backend offline';
+    document.getElementById('status-dot').className = 'status-dot dot-red';
+    return;
+  }
+  document.getElementById('api-chip').textContent = '🟢 Backend online';
+  if(st.authorized) {
+    // If they successfully logged in and are on login page, redirect to dashboard!
+    const activePage = document.querySelector('.content > div:not(.hidden)');
+    if (activePage && activePage.id === 'page-login' && !authorized) {
+      setTimeout(() => showPage('dashboard'), 500);
+    }
+    authorized = true;
+    document.getElementById('conn-chip').textContent = '🟢 Connected';
+    document.getElementById('status-dot').className = 'status-dot dot-green';
+    
+    // Update Sidebar Avatar/PFP
+    if (st.pfp) {
+      document.getElementById('acct-pfp-img').src = 'data:image/png;base64,' + st.pfp;
+      document.getElementById('acct-pfp-img').classList.remove('hidden');
+      document.getElementById('acct-avatar-text').classList.add('hidden');
+    } else {
+      const initials = (st.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      document.getElementById('acct-avatar-text').textContent = initials;
+      document.getElementById('acct-avatar-text').classList.remove('hidden');
+      document.getElementById('acct-pfp-img').classList.add('hidden');
+    }
+    
+    document.getElementById('acct-name').textContent = st.name||'User';
+    document.getElementById('acct-phone').textContent = st.phone ? '+'+st.phone : '—';
+    
+    // Update Account Page PFP & Info
+    if (st.pfp) {
+      document.getElementById('acct-large-pfp').src = 'data:image/png;base64,' + st.pfp;
+      document.getElementById('acct-large-pfp').classList.remove('hidden');
+      document.getElementById('acct-large-placeholder').classList.add('hidden');
+    } else {
+      const initials = (st.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      document.getElementById('acct-large-placeholder').textContent = initials;
+      document.getElementById('acct-large-placeholder').classList.remove('hidden');
+      document.getElementById('acct-large-pfp').classList.add('hidden');
+    }
+    
+    document.getElementById('acct-detail-name').textContent = st.name || 'User';
+    document.getElementById('acct-detail-username').textContent = st.username ? '@' + st.username : '';
+    document.getElementById('acct-detail-phone').textContent = st.phone ? '+' + st.phone : '—';
+    document.getElementById('acct-detail-id').textContent = st.id || '—';
+    
+    // show done step if on login page
+    goLoginStep('done');
+    document.getElementById('done-name').textContent = st.name + (st.username ? ' (@'+st.username+')' : '');
+  } else {
+    authorized = false;
+    document.getElementById('conn-chip').textContent = '⚫ Not authorized';
+    document.getElementById('acct-name').textContent = 'Not logged in';
+    document.getElementById('acct-phone').textContent = '—';
+    document.getElementById('status-dot').className = 'status-dot dot-grey';
+    
+    // Reset Sidebar Avatar
+    document.getElementById('acct-avatar-text').textContent = '?';
+    document.getElementById('acct-avatar-text').classList.remove('hidden');
+    document.getElementById('acct-pfp-img').classList.add('hidden');
+    
+    // Reset Account Page
+    document.getElementById('acct-large-placeholder').textContent = '?';
+    document.getElementById('acct-large-placeholder').classList.remove('hidden');
+    document.getElementById('acct-large-pfp').classList.add('hidden');
+  }
+}
+
+// ── dashboard stats ───────────────────────────────────────────
+async function loadDashboard() {
+  if(!authorized){ addLog('WARN','Not logged in — go to Login / Session'); return; }
+  addLog('INFO','Loading dialogs for stats…');
+  const r = await api('/api/dialogs?limit=200');
+  if(!r||r.error){ addLog('ERROR','Could not load dialogs'); return; }
+  allDialogs = r.dialogs;
+  const ch = allDialogs.filter(d=>d.type==='channel').length;
+  const gr = allDialogs.filter(d=>d.type==='group').length;
+  const ct = allDialogs.filter(d=>d.type==='chat').length;
+  const un = allDialogs.reduce((a,d)=>a+(d.unread||0),0);
+  document.getElementById('s-channels').textContent = ch;
+  document.getElementById('s-groups').textContent = gr;
+  document.getElementById('s-chats').textContent = ct;
+  document.getElementById('s-unread').textContent = un;
+  addLog('OK',`Loaded ${allDialogs.length} dialogs — ${ch} channels, ${gr} groups, ${ct} chats`);
+}
+
+async function markAllRead(type) {
+  const confirmed = await showConfirm(
+    '📚 Confirm Mark Read',
+    `Are you sure you want to mark all unread ${type === 'all' ? 'messages' : type + 's'} as read? This operation is instant.`,
+    false
+  );
+  if(!confirmed) return;
+  
+  showLoading(true);
+  try {
+    const r = await api('/api/dialogs/read_all', 'POST', { type });
+    if(r && r.status === 'ok') {
+      addLog('OK', `Successfully marked ${r.marked_read} unread ${type === 'all' ? 'chats' : type + 's'} as read!`);
+      await loadDashboard();
+    } else {
+      addLog('ERROR', 'Failed to mark chats as read.');
+    }
+  } catch (e) {
+    addLog('ERROR', 'Error: ' + e);
+  } finally {
+    showLoading(false);
+  }
+}
+
+// ── load dialogs table ────────────────────────────────────────
+async function loadDialogs(types) {
+  if(!authorized){ addLog('WARN','Not logged in'); return; }
+  const isChannels = types.includes('channel')||types.includes('group');
+  const bodyId = isChannels ? 'ch-body' : 'chat-body';
+  document.getElementById(bodyId).innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px">Loading…</td></tr>';
+  const r = await api('/api/dialogs?limit=500');
+  if(!r||r.error){ addLog('ERROR','Cannot load dialogs'); return; }
+  allDialogs = r.dialogs;
+  const filtered = allDialogs.filter(d=>types.split(',').includes(d.type));
+  if(isChannels){
+    selectedChannels.clear();
+    renderChannels(filtered);
+  } else {
+    selectedChats.clear();
+    renderChats(filtered.filter(d=>d.type==='chat'));
+  }
+  addLog('OK',`Loaded ${filtered.length} items`);
+}
+
+function renderChannels(list) {
+  const tbody = document.getElementById('ch-body');
+  if(!list.length){ tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:30px">No channels or groups found</td></tr>'; return; }
+  tbody.innerHTML = list.map(d=>`
+    <tr>
+      <td><input type="checkbox" class="ch-cb" data-id="${d.id}" onchange="channelCbChange(this)"></td>
+      <td style="color:var(--text);font-weight:500">${esc(d.name||'Unknown')}</td>
+      <td><span class="badge ${d.type==='channel'?'badge-blue':'badge-yellow'}">${d.type}</span></td>
+      <td>${d.unread>0?`<span style="background:var(--danger);color:#fff;padding:1px 7px;border-radius:8px;font-size:10px;font-weight:700">${d.unread}</span>`:'<span style="color:var(--muted)">0</span>'}</td>
+      <td style="display:flex;gap:6px">
+        <button class="btn" style="padding:3px 9px;font-size:11px" onclick="leaveOne(${d.id},'${esc(d.name||'')}')">🚪 Leave</button>
+        <button class="btn" style="padding:3px 9px;font-size:11px" onclick="archiveOne(${d.id},'${esc(d.name||'')}')">📦 Archive</button>
+      </td>
+    </tr>`).join('');
+}
+
+function renderChats(list) {
+  const tbody = document.getElementById('chat-body');
+  if(!list.length){ tbody.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:30px">No private chats found</td></tr>'; return; }
+  tbody.innerHTML = list.map(d=>`
+    <tr>
+      <td><input type="checkbox" class="chat-cb" data-id="${d.id}" onchange="chatCbChange(this)"></td>
+      <td style="color:var(--text);font-weight:500">${esc(d.name||'Unknown')}</td>
+      <td>${d.unread>0?`<span style="background:var(--danger);color:#fff;padding:1px 7px;border-radius:8px;font-size:10px;font-weight:700">${d.unread}</span>`:'<span style="color:var(--muted)">0</span>'}</td>
+      <td>
+        <button class="btn btn-danger" style="padding:3px 9px;font-size:11px" onclick="deleteChat(${d.id},'${esc(d.name||'')}')">🗑 Delete</button>
+      </td>
+    </tr>`).join('');
+}
+
+function esc(s){ return String(s).replace(/['"<>&]/g, c=>({'\'':'&#39;','"':'&quot;','<':'&lt;','>':'&gt;','&':'&amp;'}[c])); }
+
+// ── channel selection ─────────────────────────────────────────
+function channelCbChange(cb) {
+  const id = cb.dataset.id;
+  if(cb.checked) selectedChannels.add(id); else selectedChannels.delete(id);
+  updateChSel();
+}
+function toggleAllChannels(master) {
+  document.querySelectorAll('.ch-cb').forEach(cb=>{ cb.checked=master.checked; channelCbChange(cb); });
+}
+function updateChSel() {
+  const n = selectedChannels.size;
+  document.getElementById('ch-sel-count').textContent = n;
+  document.getElementById('ch-sel-info').classList.toggle('hidden', n===0);
+  document.getElementById('bulk-leave-btn').disabled = n===0;
+}
+
+function chatCbChange(cb) {
+  const id = cb.dataset.id;
+  if(cb.checked) selectedChats.add(id); else selectedChats.delete(id);
+  document.getElementById('bulk-delete-btn').disabled = selectedChats.size===0;
+}
+function toggleAllChats(master) {
+  document.querySelectorAll('.chat-cb').forEach(cb=>{ cb.checked=master.checked; chatCbChange(cb); });
+}
+
+// ── actions ───────────────────────────────────────────────────
+async function leaveOne(id, name) {
+  if(!await showConfirm('Leave Group/Channel', `Are you sure you want to leave "${name}"?`, true)) return;
+  addLog('INFO',`Leaving ${name}…`);
+  const r = await api('/api/dialog/leave','POST',{id});
+  if(r&&r.status==='left'){ addLog('OK',`Left ${name}`); loadDialogs('channel,group'); }
+  else addLog('ERROR',`Failed to leave ${name}`);
+}
+
+async function archiveOne(id, name) {
+  addLog('INFO',`Archiving ${name}…`);
+  const r = await api('/api/dialog/archive','POST',{id});
+  if(r&&r.status==='archived'){ addLog('OK',`Archived ${name}`); loadDialogs('channel,group'); }
+  else addLog('ERROR',`Failed to archive ${name}`);
+}
+
+async function deleteChat(id, name) {
+  if(!await showConfirm('Delete Chat History', `Delete chat history with "${name}"? This cannot be undone.`, true)) return;
+  addLog('INFO',`Deleting chat: ${name}…`);
+  const r = await api('/api/dialog/delete_history','POST',{id, revoke:false});
+  if(r&&r.status==='deleted'){ addLog('OK',`Deleted chat: ${name}`); loadDialogs('chat'); }
+  else addLog('ERROR',`Failed to delete ${name}`);
+}
+
+async function bulkLeave() {
+  const ids = [...selectedChannels];
+  if(!ids.length) return;
+  if(!await showConfirm('Bulk Leave', `Leave ${ids.length} channels/groups?`, true)) return;
+  addLog('INFO',`Bulk leaving ${ids.length} channels (rate-limited 8/min)…`);
+  let done=0;
+  for(const id of ids){
+    const d = allDialogs.find(x=>String(x.id)===id);
+    const r = await api('/api/dialog/leave','POST',{id});
+    if(r&&r.status==='left'){ done++; addLog('OK',`Left: ${d?.name||id}`); }
+    else addLog('WARN',`Could not leave: ${d?.name||id}`);
+    await sleep(7500); // ~8 per minute
+  }
+  addLog('OK',`Bulk leave done — ${done}/${ids.length} left`);
+  loadDialogs('channel,group');
+}
+
+async function bulkArchive() {
+  const ids = [...selectedChannels];
+  if(!ids.length) return;
+  addLog('INFO',`Archiving ${ids.length} items…`);
+  for(const id of ids){
+    const d = allDialogs.find(x=>String(x.id)===id);
+    await api('/api/dialog/archive','POST',{id});
+    addLog('OK',`Archived: ${d?.name||id}`);
+    await sleep(1500);
+  }
+  addLog('OK','Archive done'); loadDialogs('channel,group');
+}
+
+async function bulkDeleteChats() {
+  const ids = [...selectedChats];
+  if(!ids.length) return;
+  if(!await showConfirm('Bulk Delete Chats', `Delete ${ids.length} chats? Cannot be undone.`, true)) return;
+  for(const id of ids){
+    const d = allDialogs.find(x=>String(x.id)===id);
+    await api('/api/dialog/delete_history','POST',{id, revoke:false});
+    addLog('OK',`Deleted: ${d?.name||id}`);
+    await sleep(2000);
+  }
+  addLog('OK','Bulk delete done'); loadDialogs('chat');
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+// ── logout ────────────────────────────────────────────────────
+async function doLogout() {
+  if(!await showConfirm('Log Out', 'Log out and delete local session?', true)) return;
+  qrActive = false;
+  await api('/api/logout','POST');
+  authorized=false;
+  
+  // Reset sidebar elements
+  document.getElementById('acct-name').textContent='Not logged in';
+  document.getElementById('acct-phone').textContent='—';
+  document.getElementById('status-dot').className='status-dot dot-grey';
+  document.getElementById('conn-chip').textContent='⚫ Not authorized';
+  document.getElementById('acct-avatar-text').textContent = '?';
+  document.getElementById('acct-avatar-text').classList.remove('hidden');
+  document.getElementById('acct-pfp-img').classList.add('hidden');
+  
+  // Reset account page details
+  document.getElementById('acct-large-placeholder').textContent = '?';
+  document.getElementById('acct-large-placeholder').classList.remove('hidden');
+  document.getElementById('acct-large-pfp').classList.add('hidden');
+  document.getElementById('acct-detail-name').textContent = 'Not logged in';
+  document.getElementById('acct-detail-username').textContent = '';
+  document.getElementById('acct-detail-phone').textContent = '—';
+  document.getElementById('acct-detail-id').textContent = '—';
+  
+  addLog('INFO','Logged out');
+  showPage('login');
+  goLoginStep('choose');
+}
+
+// ── login flow ────────────────────────────────────────────────
+function setMethod(m) {
+  loginMethod = m;
+  document.querySelectorAll('.method-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+m).classList.add('active');
+  const desc = m==='phone'
+    ? 'Enter your phone number and receive an OTP via Telegram or SMS.'
+    : 'Scan a QR code using your Telegram app (Settings → Devices → Link Desktop).';
+  document.getElementById('method-desc').textContent = desc;
+}
+
+function goLoginStep(step) {
+  ['choose','phone','otp','2fa','qr','done'].forEach(s=>{
+    const el = document.getElementById('ls-'+s);
+    if(el) el.classList.remove('active');
+  });
+  const target = document.getElementById('ls-'+step);
+  if(target) target.classList.add('active');
+}
+
+function showLoginAlert(type, msg) {
+  document.getElementById('login-err').classList.remove('show');
+  document.getElementById('login-ok').classList.remove('show');
+  if(type==='err'){ document.getElementById('login-err-msg').textContent=msg; document.getElementById('login-err').classList.add('show'); }
+  else { document.getElementById('login-ok-msg').textContent=msg; document.getElementById('login-ok').classList.add('show'); }
+}
+
+function backToChoose() { qrActive = false; goLoginStep('choose'); document.getElementById('login-err').classList.remove('show'); }
+
+async function startLogin() {
+  addLog('INFO','Starting login — method: '+loginMethod);
+  if(loginMethod==='phone'){
+    goLoginStep('phone');
+    return;
+  }
+  // QR flow
+  const r = await api('/api/login/start','POST',{method:'qr'});
+  if(!r){ showLoginAlert('err','Backend not reachable'); return; }
+  if(r.status==='already_authorized'){ goLoginStep('done'); checkStatus(); return; }
+  if(r.qr_base64){
+    document.getElementById('qr-img').src = 'data:image/png;base64,'+r.qr_base64;
+    goLoginStep('qr');
+    addLog('INFO','QR code generated — scan with Telegram');
+    pollQR();
+  }
+}
+
+async function pollQR() {
+  qrActive = true;
+  let secondsElapsed = 0;
+  while(qrActive) {
+    await sleep(3000);
+    if(!qrActive) break;
+    const st = await api('/api/status', 'GET', null, true);
+    if(st&&st.authorized){
+      checkStatus();
+      goLoginStep('done');
+      document.getElementById('done-name').textContent=st.name;
+      addLog('OK','QR login successful!');
+      qrActive = false;
+      return;
+    }
+    secondsElapsed += 3;
+    if(secondsElapsed >= 24) { // Refresh every 24 seconds to keep Telegram session alive
+      addLog('INFO','Refreshing QR code to keep session active…');
+      const r = await api('/api/login/start','POST',{method:'qr'}, true);
+      if(r&&r.qr_base64){
+        document.getElementById('qr-img').src = 'data:image/png;base64,'+r.qr_base64;
+      }
+      secondsElapsed = 0;
+    }
+  }
+}
+
+async function sendPhone() {
+  const phone = document.getElementById('inp-phone').value.trim();
+  if(!phone){ showLoginAlert('err','Enter your phone number'); return; }
+  addLog('INFO','Sending OTP to '+phone+'…');
+  const r = await api('/api/login/start','POST',{method:'phone', phone});
+  if(!r){ showLoginAlert('err','Backend not reachable'); return; }
+  if(r.status==='already_authorized'){ goLoginStep('done'); checkStatus(); return; }
+  if(r.status==='code_sent'){ goLoginStep('otp'); showLoginAlert('ok','Code sent! Check Telegram / SMS.'); addLog('OK','OTP sent'); }
+  else showLoginAlert('err', r.message||'Could not send code');
+}
+
+async function submitOTP() {
+  const code = document.getElementById('inp-otp').value.trim();
+  if(!code){ showLoginAlert('err','Enter the OTP code'); return; }
+  addLog('INFO','Verifying OTP…');
+  const r = await api('/api/login/submit_code','POST',{code});
+  if(!r){ showLoginAlert('err','Backend not reachable'); return; }
+  if(r.status==='authorized'){
+    showLoginAlert('ok','Authorized successfully!');
+    checkStatus();
+    goLoginStep('done');
+  }
+  else if(r.status==='2fa_needed'){ goLoginStep('2fa'); showLoginAlert('ok','2FA needed — enter your cloud password'); }
+  else showLoginAlert('err', r.message||'Invalid code');
+}
+
+async function submit2FA() {
+  const pw = document.getElementById('inp-2fa').value;
+  const r = await api('/api/login/submit_2fa','POST',{password:pw});
+  if(!r){ showLoginAlert('err','Backend not reachable'); return; }
+  if(r.status==='authorized'){
+    showLoginAlert('ok','Authorized successfully!');
+    checkStatus();
+    goLoginStep('done');
+  }
+  else showLoginAlert('err', r.message||'Wrong password');
+}
+
+function clearLog() { document.getElementById('main-log').innerHTML=''; }
+
+// ── websocket ─────────────────────────────────────────────────
+function connectWS() {
+  try {
+    const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const ws = new WebSocket(`${proto}//${window.location.host}/ws`);
+    ws.onmessage = (e) => {
+      const {event, data} = JSON.parse(e.data);
+      if(event==='authorized') { checkStatus(); addLog('OK','Logged in as '+data.name); }
+      if(event==='flood_wait') addLog('WARN',`FloodWait: waiting ${data.seconds}s (Telegram rate limit)`);
+      if(event==='log') addLog(data.level||'INFO', data.message);
+    };
+    ws.onerror = () => {};
+    ws.onclose = () => setTimeout(connectWS, 5000);
+  } catch(e) {}
+}
+
+// ── init ──────────────────────────────────────────────────────
+function handleHash() {
+  const hash = window.location.hash.slice(1).toLowerCase();
+  const routeMap = {
+    'dashboard': 'dashboard',
+    'login': 'login',
+    'session': 'login',
+    'channels': 'channels',
+    'chats': 'chats',
+    'logs': 'logs'
+  };
+  const targetPage = routeMap[hash];
+  if(targetPage) showPage(targetPage);
+}
+window.addEventListener('hashchange', handleHash);
+
+async function initApp() {
+  showLoading(true);
+  try {
+    // Setup local storage logs and cookies for first load tracking
+    sessionStorage.setItem('ltmp_last_load', new Date().toISOString());
+    document.cookie = "ltmp_last_visit=" + new Date().toISOString() + "; path=/; max-age=31536000; SameSite=Lax";
+    
+    connectWS();
+    await checkStatus();
+    if (authorized) {
+      await loadDashboard();
+    }
+  } catch (e) {
+    console.error("Init app error:", e);
+  } finally {
+    showLoading(false);
+  }
+}
+
+initApp();
+setInterval(checkStatus, 15000);
+addLog('INFO','LTMP: Luminary Telegram Management Panel started — checking backend…');
+handleHash();
+</script>
+</body>
+</html>
