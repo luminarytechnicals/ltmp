@@ -9,4 +9,4 @@
 //  For local development leave it as "http://localhost:3421"
 // ============================================================
 
-const BACKEND_URL = "http://localhost:3421";
+const BACKEND_URL = "https://backend.ltmp.qzz.io/";
