@@ -20,7 +20,7 @@ _env_file = Path(__file__).parent / "data" / "backend.env"
 if _env_file.exists():
     load_dotenv(_env_file)
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
@@ -229,35 +229,65 @@ async def qr_waiter_task(qr_login_obj):
 async def status():
     global cached_pfp
     c = get_client()
-    if not c.is_connected():
-        await c.connect()
+    try:
+        if not c.is_connected():
+            await c.connect()
+    except Exception as e:
+        return {
+            "connected": False,
+            "authorized": False,
+            "sandbox": SANDBOX_MODE,
+            "error": f"Failed to connect to Telegram: {str(e)}",
+            "step": login_state.get("step", "idle")
+        }
 
-    authorized = await c.is_user_authorized()
-    if authorized:
-        login_state["step"] = "authorized"
-        me = await c.get_me()
-        pfp_base64 = None
-        if not SANDBOX_MODE:
-            if cached_pfp is None:
-                try:
-                    pfp_bytes = await c.download_profile_photo(me, file=bytes)
-                    if pfp_bytes:
-                        cached_pfp = base64.b64encode(pfp_bytes).decode("utf-8")
-                except Exception:
-                    pass
-            pfp_base64 = cached_pfp
+    try:
+        authorized = await c.is_user_authorized()
+    except Exception as e:
         return {
             "connected": True,
-            "authorized": True,
-            "name": f"{me.first_name or ''} {me.last_name or ''}".strip(),
-            "username": me.username,
-            "phone": me.phone,
-            "id": me.id,
-            "pfp": pfp_base64,
+            "authorized": False,
+            "sandbox": SANDBOX_MODE,
+            "error": f"Failed to check authorization: {str(e)}",
+            "step": login_state.get("step", "idle")
         }
+
+    if authorized:
+        login_state["step"] = "authorized"
+        try:
+            me = await c.get_me()
+            pfp_base64 = None
+            if not SANDBOX_MODE:
+                if cached_pfp is None:
+                    try:
+                        pfp_bytes = await c.download_profile_photo(me, file=bytes)
+                        if pfp_bytes:
+                            cached_pfp = base64.b64encode(pfp_bytes).decode("utf-8")
+                    except Exception:
+                        pass
+                pfp_base64 = cached_pfp
+            return {
+                "connected": True,
+                "authorized": True,
+                "sandbox": SANDBOX_MODE,
+                "name": f"{me.first_name or ''} {me.last_name or ''}".strip(),
+                "username": me.username,
+                "phone": me.phone,
+                "id": me.id,
+                "pfp": pfp_base64,
+            }
+        except Exception as e:
+            return {
+                "connected": True,
+                "authorized": True,
+                "sandbox": SANDBOX_MODE,
+                "name": "Telegram User",
+                "error": f"Failed to fetch user info: {str(e)}"
+            }
     return {
         "connected": True,
         "authorized": False,
+        "sandbox": SANDBOX_MODE,
         "step": login_state.get("step", "idle"),
     }
 
@@ -265,40 +295,55 @@ async def status():
 @app.post("/api/login/start")
 async def login_start(body: dict = {}):
     c = get_client()
-    await c.connect()
+    try:
+        if not c.is_connected():
+            await c.connect()
+    except Exception as e:
+        return {"status": "error", "message": f"Failed to connect to Telegram: {str(e)}"}
 
-    if await c.is_user_authorized():
-        return {"status": "already_authorized"}
+    try:
+        if await c.is_user_authorized():
+            return {"status": "already_authorized"}
+    except Exception as e:
+        return {"status": "error", "message": f"Authorization check failed: {str(e)}"}
 
     method = body.get("method", LOGIN_METHOD)
 
     if method == "qr":
-        global current_qr_login, current_qr_task
-        if current_qr_task and not current_qr_task.done():
-            current_qr_task.cancel()
+        try:
+            global current_qr_login, current_qr_task
+            if current_qr_task and not current_qr_task.done():
+                current_qr_task.cancel()
 
-        current_qr_login = await c.qr_login()
-        tg_url = current_qr_login.url
+            current_qr_login = await c.qr_login()
+            tg_url = current_qr_login.url
 
-        qr = qrcode.QRCode(box_size=6, border=2)
-        qr.add_data(tg_url)
-        qr.make(fit=True)
-        img = qr.make_image(fill_color="black", back_color="white")
-        buf = io.BytesIO()
-        img.save(buf)
-        qr_b64 = base64.b64encode(buf.getvalue()).decode()
+            qr = qrcode.QRCode(box_size=6, border=2)
+            qr.add_data(tg_url)
+            qr.make(fit=True)
+            img = qr.make_image(fill_color="black", back_color="white")
+            buf = io.BytesIO()
+            img.save(buf)
+            qr_b64 = base64.b64encode(buf.getvalue()).decode()
 
-        login_state["step"] = "qr_pending"
-        current_qr_task = asyncio.create_task(qr_waiter_task(current_qr_login))
-        return {"status": "qr_generated", "qr_base64": qr_b64, "tg_url": tg_url}
+            login_state["step"] = "qr_pending"
+            current_qr_task = asyncio.create_task(qr_waiter_task(current_qr_login))
+            return {"status": "qr_generated", "qr_base64": qr_b64, "tg_url": tg_url}
+        except Exception as e:
+            return {"status": "error", "message": f"QR generation failed: {str(e)}"}
 
     else:
         phone = body.get("phone", PHONE)
-        sent = await c.send_code_request(phone)
-        login_state["step"] = "code_sent"
-        login_state["phone_code_hash"] = sent.phone_code_hash
-        login_state["phone"] = phone
-        return {"status": "code_sent"}
+        if not phone:
+            return {"status": "error", "message": "Phone number is required"}
+        try:
+            sent = await c.send_code_request(phone)
+            login_state["step"] = "code_sent"
+            login_state["phone_code_hash"] = sent.phone_code_hash
+            login_state["phone"] = phone
+            return {"status": "code_sent"}
+        except Exception as e:
+            return {"status": "error", "message": f"Failed to send code: {str(e)}"}
 
 
 @app.post("/api/login/submit_code")
@@ -380,7 +425,11 @@ async def get_dialogs(limit: int = 100):
 
 
 @app.post("/api/dialogs/read_all")
-async def read_all_dialogs(body: dict = {}):
+async def read_all_dialogs(request: Request):
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
     c = get_client()
     if not await c.is_user_authorized():
         return {"error": "not_authorized"}

@@ -682,7 +682,7 @@
 </div><!-- /app -->
 
 <script>
-const BASE = (typeof BACKEND_URL !== 'undefined' && BACKEND_URL && BACKEND_URL.trim()) ? BACKEND_URL.trim() : window.location.origin;
+const BASE = (typeof BACKEND_URL !== 'undefined' && BACKEND_URL && BACKEND_URL.trim()) ? BACKEND_URL.trim().replace(/\/+$/, '') : window.location.origin;
 let loginMethod = 'phone';
 let authorized = false;
 let allDialogs = [];
@@ -802,7 +802,8 @@ async function api(path, method='GET', body=null, silent=false) {
 async function checkStatus() {
   const st = await api('/api/status', 'GET', null, true);
   if(!st) {
-    document.getElementById('conn-chip').textContent = '🔴 Backend offline';
+    document.getElementById('api-chip').textContent = '🔴 Backend offline';
+    document.getElementById('conn-chip').textContent = '⚫ Disconnected';
     document.getElementById('status-dot').className = 'status-dot dot-red';
     return;
   }
@@ -1206,8 +1207,16 @@ function clearLog() { document.getElementById('main-log').innerHTML=''; }
 // ── websocket ─────────────────────────────────────────────────
 function connectWS() {
   try {
-    const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const ws = new WebSocket(`${proto}//${window.location.host}/ws`);
+    let wsHost = window.location.host;
+    let wsProto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    if (typeof BASE !== 'undefined' && BASE && (BASE.startsWith('http://') || BASE.startsWith('https://'))) {
+      try {
+        const url = new URL(BASE);
+        wsHost = url.host;
+        wsProto = url.protocol === 'https:' ? 'wss:' : 'ws:';
+      } catch(e) {}
+    }
+    const ws = new WebSocket(`${wsProto}//${wsHost}/ws`);
     ws.onmessage = (e) => {
       const {event, data} = JSON.parse(e.data);
       if(event==='authorized') { checkStatus(); addLog('OK','Logged in as '+data.name); }
