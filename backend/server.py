@@ -20,8 +20,10 @@ _env_file = Path(__file__).parent / "data" / "backend.env"
 if _env_file.exists():
     load_dotenv(_env_file)
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 import uvicorn
 
 from telethon import TelegramClient, events
@@ -149,9 +151,12 @@ else:
 PHONE        = os.environ.get("PHONE", "")
 SESSION      = os.environ.get("SESSION_NAME", "my_account")
 PORT         = int(os.environ.get("PORT", 3421))
-LOGIN_METHOD = os.environ.get("LOGIN_METHOD", "phone")
-RATE_LIMIT   = int(os.environ.get("ACTIONS_PER_MINUTE", 8))
-FLOOD_BUFFER = int(os.environ.get("FLOOD_WAIT_BUFFER", 5))
+LOGIN_METHOD = os.environ.get("LOGIN_METHOD", "phone").lower()
+RATE_LIMIT   = max(1, int(os.environ.get("ACTIONS_PER_MINUTE", 8)))
+FLOOD_BUFFER = max(0, int(os.environ.get("FLOOD_WAIT_BUFFER", 5)))
+FRONTEND_ORIGINS = [o.strip() for o in os.environ.get("FRONTEND_ORIGINS", "").split(",") if o.strip()]
+if not FRONTEND_ORIGINS:
+    FRONTEND_ORIGINS = ["http://localhost:3421", "http://127.0.0.1:3421", "http://localhost:5500", "http://127.0.0.1:5500"]
 
 # Storage: Render sets STORAGE_DIR=/var/data via render.yaml disk mount
 STORAGE_DIR  = Path(os.environ.get("STORAGE_DIR", str(Path(__file__).parent / "data")))
@@ -171,9 +176,10 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="LTMP", docs_url=None, lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=FRONTEND_ORIGINS,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type"],
 )
 
 client: TelegramClient = None
@@ -232,6 +238,11 @@ async def qr_waiter_task(qr_login_obj):
 
 
 # ── Auth Routes ───────────────────────────────────────────────────────────────
+@app.get("/api/health")
+async def health():
+    return {"status": "ok", "sandbox": SANDBOX_MODE, "telegram_connected": bool(get_client().is_connected())}
+
+
 @app.get("/api/status")
 async def status():
     global cached_pfp
@@ -261,6 +272,7 @@ async def status():
             "phone": me.phone,
             "id": me.id,
             "pfp": pfp_base64,
+            "session": SESSION,
         }
     return {
         "connected": True,
@@ -428,6 +440,8 @@ async def read_all_dialogs(request: Request):
 @app.post("/api/dialog/leave")
 async def leave_dialog(body: dict):
     c = get_client()
+    if not await c.is_user_authorized():
+        return {"error": "not_authorized"}
     dialogs = await c.get_dialogs()
     dialog = next((d for d in dialogs if d.id == int(body["id"])), None)
     if not dialog:
@@ -446,6 +460,8 @@ async def archive_dialog(body: dict):
     from telethon.tl.functions.folders import EditPeerFoldersRequest
     from telethon.tl.types import InputFolderPeer
     c = get_client()
+    if not await c.is_user_authorized():
+        return {"error": "not_authorized"}
     dialogs = await c.get_dialogs()
     dialog = next((d for d in dialogs if d.id == int(body["id"])), None)
     if not dialog:
@@ -466,6 +482,8 @@ async def archive_dialog(body: dict):
 @app.post("/api/dialog/delete_history")
 async def delete_history(body: dict):
     c = get_client()
+    if not await c.is_user_authorized():
+        return {"error": "not_authorized"}
     dialogs = await c.get_dialogs()
     dialog = next((d for d in dialogs if d.id == int(body["id"])), None)
     if not dialog:
@@ -490,6 +508,12 @@ async def websocket_endpoint(ws: WebSocket):
     except WebSocketDisconnect:
         if ws in ws_clients:
             ws_clients.remove(ws)
+
+
+# Serve the bundled frontend during local development. API routes above take precedence.
+FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
+if FRONTEND_DIR.exists():
+    app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
 
 
 if __name__ == "__main__":

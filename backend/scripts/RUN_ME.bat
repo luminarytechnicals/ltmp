@@ -28,7 +28,7 @@ REM ── Install packages if not already installed ─────────
 python -c "import telethon" >nul 2>&1
 if errorlevel 1 (
     echo  [SETUP] Installing packages for the first time...
-    pip install -r requirements.txt --quiet
+    python -m pip install -r requirements.txt --quiet
     echo  [OK] Packages installed
 ) else (
     echo  [OK] Packages already installed

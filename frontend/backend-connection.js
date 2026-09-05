@@ -1,12 +1,4 @@
-// ============================================================
-//  LTMP — Backend URL Configuration
-//  ─────────────────────────────────────────────────────────
-//  THIS IS THE ONLY FILE YOU NEED TO EDIT.
-//
-//  After deploying the backend on Render, paste its URL below.
-//  Example: "https://tgcontrol-backend.onrender.com"
-//
-//  For local development leave it as "http://localhost:3421"
-// ============================================================
-
-const BACKEND_URL = "https://backend.ltmp.qzz.io/";
+// LTMP backend connection
+// Leave blank for a same-origin deployment/local backend.
+// For a separate Render backend, set the full HTTPS URL here.
+window.LTMP_BACKEND_URL = "";

@@ -25,12 +25,12 @@ if not exist "data\logs" mkdir data\logs
 REM Install dependencies
 echo.
 echo  Installing Python packages...
-pip install -r requirements.txt --quiet
+python -m pip install -r requirements.txt --quiet
 
 echo.
 echo  ========================================
-echo   NEXT STEP: Edit config.js (inside backend)
-echo   Fill in your api_id and api_hash from
+echo   NEXT STEP: Edit backend\data\backend.env
+echo   Fill in API_ID and API_HASH from
 echo   https://my.telegram.org
 echo  ========================================
 echo.

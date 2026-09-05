@@ -1,56 +1,33 @@
-# TGControl — Personal Telegram Manager
-A local tool to manage **your own** Telegram account. Runs entirely on your PC.
+# LTMP — Luminary Telegram Management Panel
 
----
+A private dashboard for managing **your own Telegram account** through Telethon.
 
-## ⚡ Quick Start (Windows)
+## Local setup (Windows)
 
-### Step 1 — Get API credentials
-1. Go to **https://my.telegram.org**
-2. Log in with your phone number
-3. Click **API Development Tools**
-4. Create an app (any name/description is fine)
-5. Copy your **App api_id** and **App api_hash**
+1. Install Python 3.9+ and make sure `python` works in Command Prompt.
+2. Open `backend/data/backend.env`.
+3. Set `API_ID` and `API_HASH` from Telegram's API Development Tools. Set `PHONE` if using phone login.
+4. Run `backend/scripts/setup.bat` once.
+5. Run `backend/scripts/start.bat`.
+6. Open `http://localhost:3421`. The backend now serves the bundled frontend, so no second web server is required.
 
-### Step 2 — Configure
-Open **`backend/config.js`** in any text editor and fill in:
-```js
-api_id:   "12345678",          // your api_id from my.telegram.org
-api_hash: "abcdef...",         // your api_hash
-login_method: "phone",         // "phone" or "qr"
-phone:    "+919876543210",     // your number (if using phone method)
-```
+### Login
+- `LOGIN_METHOD=phone`: enter your phone number and OTP in the dashboard.
+- `LOGIN_METHOD=qr`: use Telegram → Settings → Devices → Link Desktop.
 
-### Step 3 — First time setup
-Open `/backend/scripts` and double-click **`setup.bat`** — this installs Python packages.
+## Separate frontend / Render
 
-### Step 4 — Run
-Open `/backend/scripts` and double-click **`start.bat`** — then open **http://localhost:3421** in your browser.
+If the frontend and backend are on different origins, set `window.LTMP_BACKEND_URL` in `frontend/backend-connection.js` to the backend HTTPS URL and set `FRONTEND_ORIGINS` on the backend to the frontend origin.
 
----
+The Render backend uses `/var/data` for the Telegram session. Keep the persistent disk enabled so the session survives restarts.
 
-## 📱 Login Methods
+## Security
 
-**Phone + OTP** (recommended)
-- Enter your phone number in the UI
-- Receive a code in Telegram or SMS
-- Enter the code
+- Never commit API credentials or `.session` files.
+- If a real Telegram `.session` file or API credentials were previously exposed, revoke the Telegram session and rotate the credentials before production use.
+- This is intended as a private, single-user control panel. Do not expose it publicly without adding an application authentication layer.
+- API routes reject dialog operations when the Telegram client is not authorized.
 
-**QR Code**
-- Set `login_method: "qr"` in `backend/config.js`
-- Open Telegram on your phone → Settings → Devices → Link Desktop
-- Scan the QR shown in the browser
+## Health check
 
----
-
-## 🔒 Security Notes
-- Your session is saved locally in `backend/data/` as a `.session` file
-- Nothing is sent to any server — all traffic goes directly to Telegram
-- Your API credentials stay only in `backend/config.js` or in environment variables on your PC
-
----
-
-## Requirements
-- Python 3.9 or newer — https://python.org/downloads
-- Any modern browser (Chrome, Edge, Firefox)
-- Your own Telegram account
+`GET /api/health` returns backend health information for local checks and Render.

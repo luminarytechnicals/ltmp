@@ -1,18 +1,16 @@
 services:
-  # ── Backend (FastAPI + Telethon) ─────────────────────────────
   - type: web
     name: tgcontrol-backend
     env: python
     rootDir: backend
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    buildCommand: python -m pip install -r requirements.txt
+    startCommand: python -m uvicorn server:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
     envVars:
-      # Set these in the Render dashboard → Environment after first deploy
       - key: API_ID
         sync: false
       - key: API_HASH
         sync: false
-      # Optional — only needed for phone login
       - key: PHONE
         sync: false
       - key: SESSION_NAME
@@ -21,15 +19,16 @@ services:
         value: phone
       - key: STORAGE_DIR
         value: /var/data
+      - key: FRONTEND_ORIGINS
+        sync: false
     disk:
       name: tgcontrol-sessions
       mountPath: /var/data
       sizeGB: 1
 
-  # ── Frontend (Static Site) ───────────────────────────────────
   - type: web
     name: tgcontrol-frontend
     env: static
     rootDir: frontend
     buildCommand: echo "No build step required"
-    publishPath: .
+    staticPublishPath: .

@@ -7,13 +7,14 @@
 
 <!-- Favicons & Website Logo in the Head -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'%3E%3Cpath d='M50 5L90 25V60C90 78.5 73 91.5 50 95C27 91.5 10 78.5 10 60V25L50 5Z' fill='%23161b24' stroke='%2300e5b0' stroke-width='4'/%3E%3Cpath d='M55 25L32 55H50L45 75L68 45H50L55 25Z' fill='%2300e5b0'/%3E%3C/svg%3E">
+<link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'%3E%3Cpath d='M50 5L90 25V60C90 78.5 73 91.5 50 95C27 91.5 10 78.5 10 60V25L50 5Z' fill='%23161b24' stroke='%2300e5b0' stroke-width='4'/%3E%3Cpath d='M55 25L32 55H50L45 75L68 45H50L55 25Z' fill='%2300e5b0'/%3E%3C/svg%3E">
 
 <!-- SEO Meta Tags -->
 <meta name="description" content="Luminary Telegram Management Panel (LTMP) - The ultimate premium, high-speed, local dashboard for bulk Telegram session management, statistics tracking, group leaving, and secure account control. Designed with advanced developer tools.">
 <meta name="keywords" content="Telegram, Session Management, LTMP, Luminary Telegram, Bulk Leave, Session Control, Security, Telethon Dashboard">
 <meta name="author" content="AR. Abhinav Ranjan">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, nofollow, noarchive">
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
@@ -57,7 +58,7 @@
 </script>
 
 <!-- Backend Connection -->
-<script src="../backend-connection.js"></script>
+<script src="./backend-connection.js"></script>
 
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
@@ -648,7 +649,7 @@
                 <span id="acct-detail-name">Abhinav Ranjan</span>
               </div>
               <div class="acct-detail-row" style="margin-bottom: 20px; font-size: 14px; color: var(--dim);">
-                <span id="acct-detail-username">@Abhinav_Ranjan</span>
+                <span id="acct-detail-username">—</span>
               </div>
 
               <hr style="border: 0; border-top: 1px solid var(--bg3); margin: 20px 0;">
@@ -656,15 +657,15 @@
               <div class="info-list" style="text-align: left; background: var(--bg2); padding: 15px; border-radius: 8px; margin-bottom: 25px; border: 1px solid var(--bg3);">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px;">
                   <span style="color: var(--dim);">Phone Number</span>
-                  <span style="font-weight: 600;" id="acct-detail-phone">+91 82947 21929</span>
+                  <span style="font-weight: 600;" id="acct-detail-phone">—</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px;">
                   <span style="color: var(--dim);">Telegram User ID</span>
-                  <span style="font-weight: 600; font-family: monospace;" id="acct-detail-id">6013848520</span>
+                  <span style="font-weight: 600; font-family: monospace;" id="acct-detail-id">—</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; font-size: 13px;">
                   <span style="color: var(--dim);">Session Name</span>
-                  <span style="font-weight: 600; color: var(--info);" id="acct-detail-session">my_account</span>
+                  <span style="font-weight: 600; color: var(--info);" id="acct-detail-session">—</span>
                 </div>
               </div>
 
@@ -768,14 +769,7 @@ function showPage(id) {
     if(authorized) goLoginStep('done');
     else goLoginStep('choose');
   }
-  if(id==='account') {
-    try {
-      fetch('/config.js').then(r=>r.text()).then(cfg=>{
-        const m = cfg.match(/(?:"session_name"|'session_name'|session_name)\s*:\s*["']([^"']+)["']/);
-        if(m) document.getElementById('acct-detail-session').textContent = m[1];
-      }).catch(()=>{});
-    } catch(e){}
-  }
+  if(id==='account') { checkStatus(); }
   if(id==='channels') loadDialogs('channel,group');
   if(id==='chats') loadDialogs('chat');
   if(id==='dashboard') loadDashboard();
@@ -788,7 +782,10 @@ async function api(path, method='GET', body=null, silent=false) {
     const opts = {method, headers:{'Content-Type':'application/json'}};
     if(body) opts.body = JSON.stringify(body);
     const r = await fetch(BASE+path, opts);
-    const data = await r.json();
+    const text = await r.text();
+    let data = {};
+    try { data = text ? JSON.parse(text) : {}; } catch (_) { data = {status: 'error', message: text || `HTTP ${r.status}`}; }
+    if(!r.ok && !data.message) data.message = `HTTP ${r.status}`;
     if(!silent) showLoading(false);
     return data;
   } catch(e) {
@@ -832,6 +829,10 @@ async function checkStatus() {
     
     document.getElementById('acct-name').textContent = st.name||'User';
     document.getElementById('acct-phone').textContent = st.phone ? '+'+st.phone : '—';
+    document.getElementById('acct-detail-username').textContent = st.username ? '@'+st.username : '—';
+    document.getElementById('acct-detail-phone').textContent = st.phone ? '+'+st.phone : '—';
+    document.getElementById('acct-detail-id').textContent = st.id ?? '—';
+    document.getElementById('acct-detail-session').textContent = st.session || '—';
     
     // Update Account Page PFP & Info
     if (st.pfp) {
@@ -1264,6 +1265,9 @@ async function initApp() {
 }
 
 initApp();
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+}
 setInterval(checkStatus, 15000);
 addLog('INFO','LTMP: Luminary Telegram Management Panel started — checking backend…');
 handleHash();
