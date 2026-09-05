@@ -683,7 +683,11 @@
 </div><!-- /app -->
 
 <script>
-const BASE = (typeof BACKEND_URL !== 'undefined' && BACKEND_URL && BACKEND_URL.trim()) ? BACKEND_URL.trim().replace(/\/+$/, '') : window.location.origin;
+const CONFIGURED_BACKEND = (window.LTMP_BACKEND_URL || '').trim();
+const AUTO_BACKEND = (!/^localhost$|^127\.0\.0\.1$/.test(window.location.hostname) && !/^\[::1\]$/.test(window.location.hostname))
+  ? 'https://backend.ltmp.qzz.io'
+  : window.location.origin;
+const BASE = (CONFIGURED_BACKEND || AUTO_BACKEND).replace(/\/+$/, '');
 let loginMethod = 'phone';
 let authorized = false;
 let allDialogs = [];

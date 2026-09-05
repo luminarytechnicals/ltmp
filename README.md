@@ -17,7 +17,7 @@ A private dashboard for managing **your own Telegram account** through Telethon.
 
 ## Separate frontend / Render
 
-If the frontend and backend are on different origins, set `window.LTMP_BACKEND_URL` in `frontend/backend-connection.js` to the backend HTTPS URL and set `FRONTEND_ORIGINS` on the backend to the frontend origin.
+If the frontend and backend are on different origins, the frontend automatically uses `https://backend.ltmp.qzz.io` for non-localhost deployments. You can override it by setting `window.LTMP_BACKEND_URL` in `frontend/backend-connection.js`. On Render, set `FRONTEND_ORIGINS` to the exact HTTPS origin of the frontend.
 
 The Render backend uses `/var/data` for the Telegram session. Keep the persistent disk enabled so the session survives restarts.
 
