@@ -1,33 +1,25 @@
 # LTMP — Luminary Telegram Management Panel
 
-A private dashboard for managing **your own Telegram account** through Telethon.
+## Deployment
+This version is designed to deploy as **one Render web service**. The FastAPI backend serves the frontend from the same origin, so login/API/WebSocket requests do not depend on a separate `backend.ltmp.qzz.io` service.
 
-## Local setup (Windows)
+### Render
+1. Create a Render Blueprint from this repository/ZIP contents.
+2. The included `render.yaml` creates one Python web service.
+3. Set `API_ID` and `API_HASH` in Render Environment.
+4. Set `PHONE` only if required by your login configuration.
+5. Attach/use the persistent disk mounted at `/var/data`.
+6. After deployment, open `/api/health`. It must return JSON with `status: ok`.
+7. Then open the main site. The frontend automatically uses its own origin for API and WebSocket requests.
 
-1. Install Python 3.9+ and make sure `python` works in Command Prompt.
-2. Open `backend/data/backend.env`.
-3. Set `API_ID` and `API_HASH` from Telegram's API Development Tools. Set `PHONE` if using phone login.
-4. Run `backend/scripts/setup.bat` once.
-5. Run `backend/scripts/start.bat`.
-6. Open `http://localhost:3421`. The backend now serves the bundled frontend, so no second web server is required.
+### Custom domain
+Point your custom domain (for example `ltmp.qzz.io`) to the **single Render web service**, not to a separate backend hostname. Do not hard-code a backend subdomain in the frontend.
 
-### Login
-- `LOGIN_METHOD=phone`: enter your phone number and OTP in the dashboard.
-- `LOGIN_METHOD=qr`: use Telegram → Settings → Devices → Link Desktop.
-
-## Separate frontend / Render
-
-If the frontend and backend are on different origins, the frontend automatically uses `https://backend.ltmp.qzz.io` for non-localhost deployments. You can override it by setting `window.LTMP_BACKEND_URL` in `frontend/backend-connection.js`. On Render, set `FRONTEND_ORIGINS` to the exact HTTPS origin of the frontend.
-
-The Render backend uses `/var/data` for the Telegram session. Keep the persistent disk enabled so the session survives restarts.
+### Local
+From the project root:
+`python -m pip install -r backend/requirements.txt`
+`python -m uvicorn backend.server:app --host 0.0.0.0 --port 3421`
+Then open `http://127.0.0.1:3421`.
 
 ## Security
-
-- Never commit API credentials or `.session` files.
-- If a real Telegram `.session` file or API credentials were previously exposed, revoke the Telegram session and rotate the credentials before production use.
-- This is intended as a private, single-user control panel. Do not expose it publicly without adding an application authentication layer.
-- API routes reject dialog operations when the Telegram client is not authorized.
-
-## Health check
-
-`GET /api/health` returns backend health information for local checks and Render.
+Do not commit `backend/data/backend.env`, Telegram API credentials, Telegram `.session` files, or 2FA secrets.

@@ -1,10 +1,9 @@
 services:
   - type: web
-    name: tgcontrol-backend
+    name: ltmp
     env: python
-    rootDir: backend
-    buildCommand: python -m pip install -r requirements.txt
-    startCommand: python -m uvicorn server:app --host 0.0.0.0 --port $PORT
+    buildCommand: python -m pip install -r backend/requirements.txt
+    startCommand: python -m uvicorn backend.server:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
     envVars:
       - key: API_ID
@@ -21,14 +20,11 @@ services:
         value: /var/data
       - key: FRONTEND_ORIGINS
         sync: false
+      - key: ACTIONS_PER_MINUTE
+        value: "8"
+      - key: FLOOD_WAIT_BUFFER
+        value: "5"
     disk:
-      name: tgcontrol-sessions
+      name: ltmp-sessions
       mountPath: /var/data
       sizeGB: 1
-
-  - type: web
-    name: tgcontrol-frontend
-    env: static
-    rootDir: frontend
-    buildCommand: echo "No build step required"
-    staticPublishPath: .

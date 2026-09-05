@@ -1,7 +1,7 @@
 """
 LTMP — Luminary Telegram Management Panel Backend
 Reads config from environment variables or backend/data/backend.env
-Start with: uvicorn server:app --host 0.0.0.0 --port $PORT
+Start with: python -m uvicorn backend.server:app --host 0.0.0.0 --port $PORT
 """
 
 import asyncio

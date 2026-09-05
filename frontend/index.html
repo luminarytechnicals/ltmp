@@ -684,10 +684,9 @@
 
 <script>
 const CONFIGURED_BACKEND = (window.LTMP_BACKEND_URL || '').trim();
-const AUTO_BACKEND = (!/^localhost$|^127\.0\.0\.1$/.test(window.location.hostname) && !/^\[::1\]$/.test(window.location.hostname))
-  ? 'https://backend.ltmp.qzz.io'
-  : window.location.origin;
-const BASE = (CONFIGURED_BACKEND || AUTO_BACKEND).replace(/\/+$/, '');
+// Production uses the same origin as the frontend. This avoids a fragile
+// hard-coded backend hostname and eliminates cross-domain deployment issues.
+const BASE = (CONFIGURED_BACKEND || window.location.origin).replace(/\/+$/, '');
 let loginMethod = 'phone';
 let authorized = false;
 let allDialogs = [];
