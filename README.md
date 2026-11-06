@@ -1,25 +1,31 @@
-# LTMP — Luminary Telegram Management Panel
+# LTMP website starter
 
-## Deployment
-This version is designed to deploy as **one Render web service**. The FastAPI backend serves the frontend from the same origin, so login/API/WebSocket requests do not depend on a separate `backend.ltmp.qzz.io` service.
+**LTMP — Luminary Trusted Modular Platform**  
+A responsive static website concept for `https://ltmp.qzz.io/`, presented as part of the Luminary Technicals ecosystem.
 
-### Render
-1. Create a Render Blueprint from this repository/ZIP contents.
-2. The included `render.yaml` creates one Python web service.
-3. Set `API_ID` and `API_HASH` in Render Environment.
-4. Set `PHONE` only if required by your login configuration.
-5. Attach/use the persistent disk mounted at `/var/data`.
-6. After deployment, open `/api/health`. It must return JSON with `status: ok`.
-7. Then open the main site. The frontend automatically uses its own origin for API and WebSocket requests.
+## Included
+- Responsive homepage and tool directory with search and filters
+- About, Trust Centre, For Organizations, Contribute, Governance, Privacy and Terms pages
+- Mobile navigation, accessible focus states, reduced-motion support
+- SEO metadata, canonical URLs, Open Graph metadata, robots.txt and sitemap.xml
+- JSON-LD `Organization`, `WebSite`, `WebPage` and `CollectionPage` markup
+- Credits to Luminary Technicals and explicit third-party ownership disclaimers
+- No backend, trackers, analytics, cookies or live submission endpoint included by default
 
-### Custom domain
-Point your custom domain (for example `ltmp.qzz.io`) to the **single Render web service**, not to a separate backend hostname. Do not hard-code a backend subdomain in the frontend.
+## Before publishing
+1. Upload the contents of this folder to the hosting root for `ltmp.qzz.io`.
+2. Confirm HTTPS and configure the domain's DNS/hosting.
+3. Verify that each canonical URL matches the final deployed URL.
+4. Replace any planned/concept listing with a verified official URL, correct pricing/access terms and a review date.
+5. Add the real official URL for Luminary Web Board — Canvas when confirmed.
+6. Connect the Contribute page to a secure, working submission endpoint or official contact email.
+7. Review privacy and terms pages to match the actual hosting and data practices.
+8. Test mobile layout, links, accessibility, sitemap and structured data.
+9. Submit `https://ltmp.qzz.io/sitemap.xml` in Google Search Console after deployment.
 
-### Local
-From the project root:
-`python -m pip install -r backend/requirements.txt`
-`python -m uvicorn backend.server:app --host 0.0.0.0 --port 3421`
-Then open `http://127.0.0.1:3421`.
+## SEO / AEO / GEO notes
+The site uses semantic headings, crawlable text, descriptive page titles, meta descriptions, internal links, canonical URLs and JSON-LD. Content is written in direct question-answer-friendly language to help users and answer systems understand the project. “GEO” (generative engine optimization) and “AEO” (answer engine optimization) are not guarantees or special ranking switches: focus on accurate, useful, original content, clear attribution and a technically accessible site. Search indexing and result appearance are never guaranteed.
 
-## Security
-Do not commit `backend/data/backend.env`, Telegram API credentials, Telegram `.session` files, or 2FA secrets.
+## Credits
+Concept, design and website starter: LTMP / Luminary Technicals.  
+Third-party services and trademarks remain the property of their respective owners. No partnership or endorsement is implied by directory inclusion.
